@@ -2,7 +2,7 @@
 /* File        : absensi.c						              */
 /* Deskripsi   : Kontrol Program Pengelolaan Absensi*/
 /* Dibuat oleh : Indah & Yani                       */
-/* Tanggal     : 03/12/2023 (revisi)                */
+/* Tanggal     : 05/12/2023 (revisi)                */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -136,6 +136,39 @@ void registerStudent()
   getchar();
   getchar();
 }
+
+int getListOfStudentsRegistered()
+{
+  DIR* di;
+  char* ptr1, *ptr2, nama;
+  int retn, hasil;
+  struct dirent* dir;
+  di = opendir(".");
+  if (di)
+  {
+    printf("\n\n--------Daftar Mahasiswa Berdasarkan NIM--------\n\n");
+    while ((dir = readdir(di)) != NULL)
+      {
+        ptr1 = strtok(dir->d_nama, ".");
+        ptr2 = strtok(NULL, ".");
+        if (ptr2 != NULL)
+        {
+          retn = strcmp(ptr2, "dat");
+          if (retn == 0)
+          {
+            printf("\n\n");
+            printf("%s\t", ptr1);
+            printf("\n\n");
+          }
+        }
+      }
+    closedir(dir);
+  }
+}
+printf("Klik mana saja untuk melanjutkan ...");
+getchar();
+getchar();
+return 0;
 
 int deleteAllStudents()
 {
