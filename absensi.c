@@ -1,10 +1,13 @@
 /*--------------------------------------------------*/
-/* File			: absensi.c						                  */
-/* Deskripsi	: Header ADT Buruh					*/
-/* Dibuat oleh	: Indah	Ratu Pramudita/231511050	*/
-/* Tanggal		: 22/11/2023 (revisi)				*/
+/* File        : absensi.c						              */
+/* Deskripsi   : Kontrol Program Pengelolaan Absensi*/
+/* Dibuat oleh : Indah & Yani                       */
+/* Tanggal     : 03/12/2023 (revisi)                */
 
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 void date()
 {
