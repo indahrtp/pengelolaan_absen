@@ -1,5 +1,5 @@
 /*--------------------------------------------------*/
-/* File        : absensi.c			    */
+/* File        : absensi.c			    			*/
 /* Deskripsi   : Kontrol Program Pengelolaan Absensi*/
 /* Dibuat oleh : Indah & Yani                       */
 /* Tanggal     : 05/12/2023 (revisi)                */
@@ -10,24 +10,25 @@
 #include <time.h>
 #include "absensi.h"
 
-void date()
-{
-  time_t T = time(NULL);
-  struct tm = *localtime(&T);
-  printf("\n\n\n");
-  printf("\t\t\t\t\t  Date:%02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900);
-}
+//void date()
+//{
+//  time_t T = time(NULL);
+//  struct tm = *localtime(&T);
+//  printf("\n\n\n");
+//  printf("\t\t\t\t\t  Date:%02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900);
+//}
 
 // Fungsi untuk login admin
 int adminLogin()
 {
-    Admin admin;
+    system("cls");
+	Admin admin;
     char inputUsername[20];
     char inputPassword[20];
 
-    printf("\n\n\n\n\t\t\t--------------------------\n");
-    printf("\t\t\t|   Login Admin   |\n");
-    printf("\t\t\t--------------------------\n\n");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|                Login Admin                 |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
     printf("\t\t\t Masukkan username admin: ");
     scanf("%s", inputUsername);
     printf("\t\t\t Masukkan password admin: ");
@@ -36,7 +37,7 @@ int adminLogin()
     FILE *adminFile = fopen("admin.dat", "r");
     if (!adminFile)
     {
-        printf("Error: File admin.dat tidak dapat dibuka.\n");
+        printf("\n\t\t\tError: File admin.dat tidak dapat dibuka.\n");
         return 0;
     }
 
@@ -56,51 +57,56 @@ int adminLogin()
 // Fungsi untuk register mahasiswa
 void registerMahasiswa()
 {
-    Mahasiswa data;
+    system("cls");
+	Mahasiswa data;
 
     printf("\n\n\n\n\t\t\t----------------------------------------------\n");
     printf("\t\t\t|         Registrasi Data Mahasiswa           |\n");
     printf("\t\t\t----------------------------------------------\n\n");
-    printf(" Masukkan Nama Mahasiswa: ");
+    printf("\t\t\t Masukkan Nama Mahasiswa: ");
     scanf("%s", data.namaMhs);
-	printf(" Masukkan NIM: ");
+	printf("\t\t\t Masukkan NIM: ");
     scanf("%s", data.nimMhs);
-    printf(" Masukkan Password: ");
+    printf("\t\t\t Masukkan Password: ");
     scanf("%s", data.password);
     getchar(); // Membersihkan buffer keyboard
-    printf(" Masukkan Alamat: ");
+    printf("\t\t\t Masukkan Alamat: ");
     fgets(data.alamat, sizeof(data.alamat), stdin);
-    printf(" Masukkan Jurusan: ");
+    printf("\t\t\t Masukkan Jurusan: ");
     scanf("%s", data.jurusan);
-    printf(" Masukkan Prodi: ");
+    printf("\t\t\t Masukkan Prodi: ");
     scanf("%s", data.prodi);
 
     FILE *mhsFile = fopen("mhs.dat", "a");
     if (!mhsFile)
     {
-        printf("Error: File mhs.dat tidak dapat dibuka.\n");
+        printf("\t\t\tError: File mhs.dat tidak dapat dibuka.\n");
         return;
     }
 
     fprintf(mhsFile, "%s|%s|%s|%s|%s|%s\n", data.namaMhs, data.nimMhs, data.password, data.alamat, data.jurusan, data.prodi);
     fclose(mhsFile);
 
-    printf("Registrasi berhasil!!\n");
+    printf("\t\t\tRegistrasi berhasil!!\n");
 }
 
 // Fungsi untuk mencari mahasiswa berdasarkan NIM
 void searchMahasiswa()
 {
-    char searchNIM[10];
+    system("cls");
+	char searchNIM[10];
     Mahasiswa data;
 
-    printf("Masukkan NIM mahasiswa yang ingin dicari: ");
+	printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|               Cari Mahasiswa               |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+    printf("\t\t\tMasukkan NIM mahasiswa yang ingin dicari: ");
     scanf("%s", searchNIM);
 
     FILE *mhsFile = fopen("mhs.dat", "r");
     if (!mhsFile)
     {
-        printf("Error: File mhs.dat tidak dapat dibuka.\n");
+        printf("\t\t\tError: File mhs.dat tidak dapat dibuka.\n");
         return;
     }
 
@@ -109,47 +115,55 @@ void searchMahasiswa()
     {
         if (strcmp(searchNIM, data.nimMhs) == 0)
         {
-	    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
-	    printf("\t\t\t|           Data Mahasiswa Ditemukan          |\n");
-	    printf("\t\t\t----------------------------------------------\n\n");
-            printf("Nama     : %s\n", data.namaMhs);
-            printf("NIM      : %s\n", data.nimMhs);
-            printf("Password : %s\n", data.password);
-            printf("Alamat   : %s\n", data.alamat);
-            printf("Jurusan  : %s\n", data.jurusan);
-            printf("Prodi    : %s\n", data.prodi);
-            fclose(mhsFile);
-            return;
+		    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+		    printf("\t\t\t|           Data Mahasiswa Ditemukan          |\n");
+		    printf("\t\t\t----------------------------------------------\n\n");
+	            printf("\t\t\tNama     : %s\n", data.namaMhs);
+	            printf("\t\t\tNIM      : %s\n", data.nimMhs);
+	            printf("\t\t\tPassword : %s\n", data.password);
+	            printf("\t\t\tAlamat   : %s\n", data.alamat);
+	            printf("\t\t\tJurusan  : %s\n", data.jurusan);
+	            printf("\t\t\tProdi    : %s\n", data.prodi);
+//	            fclose(mhsFile);
+	//            return;
         }
     }
 
     fclose(mhsFile);
-    printf("Mahasiswa dengan NIM %s tidak ditemukan.\n", searchNIM);
+    printf("\t\t\tMahasiswa dengan NIM %s tidak ditemukan.\n", searchNIM);
+    
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+	while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
 }
 
 // Fungsi untuk menghapus data mahasiswa berdasarkan NIM
 void deleteMahasiswa()
 {
-    char deleteNIM[10];
+    system("cls");
+	char deleteNIM[10];
     Mahasiswa data;
 
-    printf("Masukkan NIM mahasiswa yang ingin dihapus: ");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|              Hapus Mahasiswa               |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+	printf("\t\t\tMasukkan NIM mahasiswa yang ingin dihapus: ");
     scanf("%s", deleteNIM);
 
     FILE *mhsFile = fopen("mhs.dat", "r");
     if (!mhsFile)
     {
-        printf("Error: File mhs.dat tidak dapat dibuka.\n");
-        return;
+        printf("\t\t\tError: File mhs.dat tidak dapat dibuka.\n");
+//        return;
     }
 
     // Membuat file temporary untuk menyimpan data selain yang akan dihapus
     FILE *tempFile = fopen("temp.dat", "w");
     if (!tempFile)
     {
-        printf("Error: File temp.dat tidak dapat dibuka.\n");
+        printf("\t\t\tError: File temp.dat tidak dapat dibuka.\n");
         fclose(mhsFile);
-        return;
+//        return;
     }
 
     int found = 0;
@@ -160,16 +174,16 @@ void deleteMahasiswa()
         if (strcmp(deleteNIM, data.nimMhs) == 0)
         {
             found = 1;
-	    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
-	    printf("\t\t\t|            Hapus Data Mahasiswa             |\n");
-	    printf("\t\t\t----------------------------------------------\n\n");
-            printf("Nama     : %s\n", data.namaMhs);
-            printf("NIM      : %s\n", data.nimMhs);
-            printf("Password : %s\n", data.password);
-            printf("Alamat   : %s\n", data.alamat);
-            printf("Jurusan  : %s\n", data.jurusan);
-            printf("Prodi    : %s\n", data.prodi);
-            printf("\nData mahasiswa dengan NIM %s berhasil dihapus.\n", deleteNIM);
+		    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+		    printf("\t\t\t|            Hapus Data Mahasiswa             |\n");
+		    printf("\t\t\t----------------------------------------------\n\n");
+            printf("\t\t\tNama     : %s\n", data.namaMhs);
+            printf("\t\t\tNIM      : %s\n", data.nimMhs);
+            printf("\t\t\tPassword : %s\n", data.password);
+            printf("\t\t\tAlamat   : %s\n", data.alamat);
+            printf("\t\t\tJurusan  : %s\n", data.jurusan);
+            printf("\t\t\tProdi    : %s\n", data.prodi);
+            printf("\n\t\t\tData mahasiswa dengan NIM %s berhasil dihapus.\n", deleteNIM);
         }
         else
         {
@@ -188,30 +202,63 @@ void deleteMahasiswa()
 
     if (!found)
     {
-        printf("Mahasiswa dengan NIM %s tidak ditemukan.\n", deleteNIM);
+        printf("\t\t\tMahasiswa dengan NIM %s tidak ditemukan.\n", deleteNIM);
     }
+    
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+    while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
 }
+
+void displayAllMahasiswa() {
+    system("cls");
+    Mahasiswa data;
+
+    FILE *mhsFile = fopen("mhs.dat", "r");
+    if (!mhsFile) {
+        printf("\t\t\tError: File mhs.dat tidak dapat dibuka.\n");
+        return;
+    }
+
+    printf("\t\t\t--------------------------------------------------------\n");
+    printf("\t\t\t|              Semua Data Mahasiswa                    |\n");
+    printf("\t\t\t--------------------------------------------------------\n\n");
+
+    while (fscanf(mhsFile, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^\n]\n",
+                  data.namaMhs, data.nimMhs, data.password, data.alamat, data.jurusan, data.prodi) == 6) {
+        printf("\t\t\tNama     : %s\n", data.namaMhs);
+        printf("\t\t\tNIM      : %s\n", data.nimMhs);
+        printf("\t\t\tPassword : %s\n", data.password);
+        printf("\t\t\tAlamat   : %s\n", data.alamat);
+        printf("\t\t\tJurusan  : %s\n", data.jurusan);
+        printf("\t\t\tProdi    : %s\n", data.prodi);
+        printf("\t\t\t--------------------------------------------------------\n");
+    }
+
+    fclose(mhsFile);
+}
+
 
 //Fungsi untuk tampilan admin
 int adminView()
 {
+  system("cls");
   int goBack = 0;
   while (1)
   {
     system("cls");
-    date();
+//    date();
     printf("\n\n\n\n\t\t\t----------------------------------------------\n");
     printf("\t\t\t|                Menu Admin                   |\n");
     printf("\t\t\t----------------------------------------------\n\n");
-    printf("\n\n\n\n");
-    printf("\n1. Registrasi Mahasiswa");
-    printf("\n2. Hapus Mahasiswa Terdaftar Berdasarkan NIM");
-    printf("\n3. List Mahasiswa Terdaftar Berdasarkan NIM");
-    printf("\n4. Cari Mahasiswa Berdasarkan NIM");
-    printf("\n0. Kembali\n");
+    printf("\t\t\t1. Registrasi Mahasiswa\n");
+    printf("\t\t\t2. Hapus Mahasiswa Terdaftar Berdasarkan NIM\n");
+    printf("\t\t\t3. List Mahasiswa Terdaftar Berdasarkan NIM\n");
+    printf("\t\t\t4. Cari Mahasiswa Berdasarkan NIM\n");
+    printf("\t\t\t0. Kembali\n");
 
     int pilihan;
-    printf("\nMasukkan pilihanmu : ");
+    printf("\t\t\tMasukkan pilihanmu : ");
     scanf("%d", &pilihan);
     
     switch(pilihan)
@@ -223,16 +270,16 @@ int adminView()
             deleteMahasiswa();
             break;
         case 3:
-            getListOfStudentsRegistered();
+            displayAllMahasiswa();
             break;
         case 4:
             searchMahasiswa();
             break;
-        case 0;
+        case 0:
             goBack = 1;
             break;
         default:
-            printf("\nPilihan tidak valid. Masukkan pilihan lagi!");
+            printf("\t\t\t\nPilihan tidak valid. Masukkan pilihan lagi!");
             getchar();
       }
       if (goBack == 1)
