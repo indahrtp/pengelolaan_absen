@@ -328,3 +328,46 @@ int adminView()
   return 0;
 }
 
+void studentView()
+{
+	system("cls");
+	int goBack = 0;
+	int pilihan;
+	while (1)
+	{
+    system("cls");
+//    date();
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|                Absensi Mahasiswa                  |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+    printf("\t\t\t1. Absensi\n");
+    printf("\t\t\t2. Lihat Riwayat Absen\n");
+    printf("\t\t\t0. Kembali\n");
+    
+    printf("\t\t\tMasukkan pilihanmu : ");
+    scanf("%d", &pilihan);
+    
+    switch(pilihan)
+      {
+        case 1:
+            absensiMahasiwa();
+            break;
+        case 2:
+            rekapAbsen();
+            break;
+        case 0:
+            goBack = 1;
+            break;
+        default:
+            printf("\t\t\t\nPilihan tidak valid. Masukkan pilihan lagi!");
+            getchar();
+      }
+      if (goBack == 1)
+      {
+        break;
+      }
+  }
+}
+
+void absensiMahasiswa()
+
