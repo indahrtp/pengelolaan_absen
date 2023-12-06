@@ -41,4 +41,6 @@ void displayAllMahasiswa();
 // Prosedur untuk menghapus data mahasiswa berdasarkan NIM
 void deleteMahasiswa();
 
+int validasiNIM();
+
 #endif
