@@ -7,31 +7,36 @@
 #ifndef absensi_h
 #define absensi_h
 
+// Struktur untuk data mahasiswa
 typedef struct {
     char namaMhs[50];
     char nimMhs[10];
     char password[10];
     char alamat[100];
     char jurusan[30];
-    char prodi[30];
-} mahasiswa;
+    char prodi[50];
+} Mahasiswa;
 
-/**/
-void adminView();
+// Struktur untuk data admin
+typedef struct {
+    char username[20];
+    char password[20];
+} Admin;
 
-/**/
-int loginAdmin();
+// Fungsi untuk login admin
+int adminLogin();
 
-/**/
-void registerStudent();
+//Fungsi untuk tampilan admin
+int adminView();
 
-/**/
-int listStudent();
+// Prosedur untuk register mahasiswa
+void registerMahasiswa();
 
-/**/
-int search();
+// Prosedur untuk mencari mahasiswa berdasarkan NIM
+void searchMahasiswa();
 
-/**/
-int deleteStudent();
+// Prosedur untuk menghapus data mahasiswa berdasarkan NIM
+void deleteMahasiswa();
 
 #endif
+
