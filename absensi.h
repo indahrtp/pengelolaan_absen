@@ -1,8 +1,8 @@
 /*--------------------------------------------------*/
-/* File        : absensi.h	    					          */
-/* Deskripsi   : Header ADT Buruh				          	*/
+/* File        : absensi.h	    					*/
+/* Deskripsi   : Header ADT Buruh				    */
 /* Dibuat oleh : Indah & Yani                  	    */
-/* Tanggal     : 5/12/2023 (revisi)				          */
+/* Tanggal     : 5/12/2023 (revisi)				    */
 
 #ifndef absensi_h
 #define absensi_h
@@ -35,8 +35,10 @@ void registerMahasiswa();
 // Prosedur untuk mencari mahasiswa berdasarkan NIM
 void searchMahasiswa();
 
+// Prosedur untuk menampilkan data mahasiswa keseluruhan pada file mhs.dat
+void displayAllMahasiswa();
+
 // Prosedur untuk menghapus data mahasiswa berdasarkan NIM
 void deleteMahasiswa();
 
 #endif
-
