@@ -1,5 +1,5 @@
 /*--------------------------------------------------*/
-/* File        : absensi.c						              */
+/* File        : absensi.c			    */
 /* Deskripsi   : Kontrol Program Pengelolaan Absensi*/
 /* Dibuat oleh : Indah & Yani                       */
 /* Tanggal     : 05/12/2023 (revisi)                */
@@ -25,9 +25,12 @@ int adminLogin()
     char inputUsername[20];
     char inputPassword[20];
 
-    printf("Masukkan username admin: ");
+    printf("\n\n\n\n\t\t\t--------------------------\n");
+    printf("\t\t\t|   Login Admin   |\n");
+    printf("\t\t\t--------------------------\n\n");
+    printf("\t\t\t Masukkan username admin: ");
     scanf("%s", inputUsername);
-    printf("Masukkan password admin: ");
+    printf("\t\t\t Masukkan password admin: ");
     scanf("%s", inputPassword);
 
     FILE *adminFile = fopen("admin.dat", "r");
@@ -55,7 +58,9 @@ void registerMahasiswa()
 {
     Mahasiswa data;
 
-    printf("\n ---- Form untuk Pendaftaran Mahasiswa ----- \n\n");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|         Registrasi Data Mahasiswa           |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
     printf(" Masukkan Nama Mahasiswa: ");
     scanf("%s", data.namaMhs);
 	printf(" Masukkan NIM: ");
@@ -104,7 +109,9 @@ void searchMahasiswa()
     {
         if (strcmp(searchNIM, data.nimMhs) == 0)
         {
-            printf("\n--- Data Mahasiswa ---\n");
+	    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+	    printf("\t\t\t|           Data Mahasiswa Ditemukan          |\n");
+	    printf("\t\t\t----------------------------------------------\n\n");
             printf("Nama     : %s\n", data.namaMhs);
             printf("NIM      : %s\n", data.nimMhs);
             printf("Password : %s\n", data.password);
@@ -153,7 +160,9 @@ void deleteMahasiswa()
         if (strcmp(deleteNIM, data.nimMhs) == 0)
         {
             found = 1;
-            printf("\n--- Data Mahasiswa yang dihapus ---\n");
+	    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+	    printf("\t\t\t|            Hapus Data Mahasiswa             |\n");
+	    printf("\t\t\t----------------------------------------------\n\n");
             printf("Nama     : %s\n", data.namaMhs);
             printf("NIM      : %s\n", data.nimMhs);
             printf("Password : %s\n", data.password);
@@ -191,13 +200,14 @@ int adminView()
   {
     system("cls");
     date();
-    printf("\n\n\nPilih satu opsi\n");
-    printf("-------------------------------");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|                Menu Admin                   |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+    printf("\n\n\n\n");
     printf("\n1. Registrasi Mahasiswa");
     printf("\n2. Hapus Mahasiswa Terdaftar Berdasarkan NIM");
     printf("\n3. List Mahasiswa Terdaftar Berdasarkan NIM");
     printf("\n4. Cari Mahasiswa Berdasarkan NIM");
-    printf("\n5. Hapus Semua Data Mahasiswa");
     printf("\n0. Kembali\n");
 
     int pilihan;
