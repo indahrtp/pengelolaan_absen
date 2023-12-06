@@ -1,38 +1,44 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "absensi.h"
 
 int main()
 {
-    int choice;
-
+	int choice;
+	int login;
     do
     {
-        printf("\n ---- Menu Login ---- \n");
-        printf("1. Login sebagai Admin\n");
-        printf("2. Login sebagai Mahasiswa\n");
-        printf("3. Keluar\n");
-        printf("Pilih menu: ");
+	    system("cls");
+		printf("\t\t\t-------------------------------------------------------------------------\n");
+	    printf("\t\t\t|                              Menu Login                               |\n");
+	    printf("\t\t\t-------------------------------------------------------------------------\n\n");
+        printf("\n\t\t\t1. Login sebagai Admin\n");
+        printf("\t\t\t2. Login sebagai Mahasiswa\n");
+        printf("\t\t\t3. Keluar\n");
+        printf("\n\t\t\tPilih menu: ");
         scanf("%d", &choice);
 
         switch (choice)
         {
         case 1:
-            if (adminLogin())
+        	login=adminLogin();
+            if (login==1)
             {
-            	viewAdmin()
+            	adminView();
         	}
 			else
             {
-                printf("Login admin gagal. Silakan coba lagi.\n");
+                printf("\t\t\tLogin admin gagal. Silakan coba lagi.\n");
             }
             break;
         case 2:
         	break;
         case 3:
-            printf("Terima kasih. Program selesai.\n");
+            printf("\t\t\tTerima kasih. Program selesai.\n");
             break;
         default:
-            printf("Pilihan tidak valid. Silakan coba lagi.\n");
+            printf("\t\t\tPilihan tidak valid. Silakan coba lagi.\n");
             break;
         }
 
