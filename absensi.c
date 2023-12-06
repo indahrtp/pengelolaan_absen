@@ -18,6 +18,28 @@
 //  printf("\t\t\t\t\t  Date:%02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900);
 //}
 
+int validasiNIM(const char *nim)
+{
+    FILE* read = fopen("mhs.dat", "r");
+    Mahasiswa data;
+    char nimsekarang[10];
+    if (read)
+    {
+        
+        while (fscanf(read, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^\n]\n",
+                  data.namaMhs, data.nimMhs, data.password, data.alamat, data.jurusan, data.prodi) == 6)
+        {
+            if (strcmp(data.nimMhs, nim) == 0)
+            {
+                fclose(read);
+                return 1; // NIM sudah terdaftar
+            }
+        }
+        fclose(read);
+    }
+    return 0; // NIM belum terdaftar
+}
+
 // Fungsi untuk login admin
 int adminLogin()
 {
@@ -59,14 +81,26 @@ void registerMahasiswa()
 {
     system("cls");
 	Mahasiswa data;
+	int validasi;
 
     printf("\n\n\n\n\t\t\t----------------------------------------------\n");
     printf("\t\t\t|         Registrasi Data Mahasiswa           |\n");
     printf("\t\t\t----------------------------------------------\n\n");
     printf("\t\t\t Masukkan Nama Mahasiswa: ");
     scanf("%s", data.namaMhs);
-	printf("\t\t\t Masukkan NIM: ");
-    scanf("%s", data.nimMhs);
+    do
+    {
+        printf("\t\t\t Masukkan NIM: ");
+        scanf("%s", data.nimMhs);
+        
+        validasi = validasiNIM(data.nimMhs);
+        if (validasi == 1)
+        {
+            printf("\n\t\t\t NIM telah terdaftar. Mohon inputkan NIM lain.\n");
+        }
+
+    } while (validasi == 1);
+    printf("%d", validasi);
     printf("\t\t\t Masukkan Password: ");
     scanf("%s", data.password);
     getchar(); // Membersihkan buffer keyboard
@@ -87,7 +121,10 @@ void registerMahasiswa()
     fprintf(mhsFile, "%s|%s|%s|%s|%s|%s\n", data.namaMhs, data.nimMhs, data.password, data.alamat, data.jurusan, data.prodi);
     fclose(mhsFile);
 
-    printf("\t\t\tRegistrasi berhasil!!\n");
+    printf("\t\t\t Registrasi berhasil!!\n");
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+	while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
 }
 
 // Fungsi untuk mencari mahasiswa berdasarkan NIM
@@ -130,11 +167,12 @@ void searchMahasiswa()
     }
 
     fclose(mhsFile);
-    printf("\t\t\tMahasiswa dengan NIM %s tidak ditemukan.\n", searchNIM);
     
     printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
 	while (getchar() != '\n'); // Membersihkan buffer input
 	getchar();
+    printf("\t\t\tMahasiswa dengan NIM %s tidak ditemukan.\n", searchNIM);
+    
 }
 
 // Fungsi untuk menghapus data mahasiswa berdasarkan NIM
@@ -289,3 +327,4 @@ int adminView()
   }
   return 0;
 }
+
