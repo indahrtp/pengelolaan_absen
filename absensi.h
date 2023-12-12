@@ -58,14 +58,24 @@ void displayAllMahasiswa();
 // Prosedur untuk menghapus data mahasiswa berdasarkan NIM
 void deleteMahasiswa();
 
+void recapAbsensi();
+
 void login(Jadwal *jadwal, int numMatkul);
+
 void absensi(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul);
+
 void saveAbsensi(char nim[], char tanggal[], char waktu[], char status[], char matkul[]);
+
 void readAbsensi(char nim[]);
+
 int findMahasiswaIndex(char nim[], Mahasiswa *mahasiswas, int numMahasiswas);
+
 int isAbsensiAlreadyDone(char nim[], char matkul[], char currentDate[]);
+
 void printCurrentMatkul(Jadwal *jadwal, int currentMatkulIndex);
+
 void studentView(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul);
+
 int validasiNIM(const char *nim);
 
 #endif
