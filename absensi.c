@@ -110,8 +110,9 @@ void registerMahasiswa()
     printf("\n\n\n\n\t\t\t----------------------------------------------\n");
     printf("\t\t\t|         Registrasi Data Mahasiswa           |\n");
     printf("\t\t\t----------------------------------------------\n\n");
+    getchar(); // Membersihkan buffer keyboard
     printf("\t\t\t Masukkan Nama Mahasiswa: ");
-    scanf("%s", data.namaMhs);
+    fgets(data.namaMhs, sizeof(data.namaMhs), stdin);
     do
     {
         printf("\t\t\t Masukkan NIM: ");
@@ -124,17 +125,16 @@ void registerMahasiswa()
         }
 
     } while (validasi == 1);
-    printf("%d", validasi);
     printf("\t\t\t Masukkan Password: ");
     scanf("%s", data.password);
     getchar(); // Membersihkan buffer keyboard
     printf("\t\t\t Masukkan Alamat: ");
     fgets(data.alamat, sizeof(data.alamat), stdin);
     printf("\t\t\t Masukkan Jurusan: ");
-    scanf("%s", data.jurusan);
+    fgets(data.jurusan, sizeof(data.jurusan), stdin);
     printf("\t\t\t Masukkan Prodi: ");
-    scanf("%s", data.prodi);
-
+    fgets(data.prodi, sizeof(data.prodi), stdin);
+	
     FILE *mhsFile = fopen("mhs.dat", "a");
     if (!mhsFile)
     {
