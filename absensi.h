@@ -23,6 +23,23 @@ typedef struct {
     char password[20];
 } Admin;
 
+// Struktur untuk data absensi
+typedef struct {
+    char hari[15];
+    char tanggal[15];
+    int jamAbsen;
+    int menitAbsen;
+    char status[10];
+    int presentase;
+} Absensi;
+
+typedef struct {
+    char hari[100];
+    int jamAwal_hour, jamAwal_min, jamAwal_sec;
+    int jamAkhir_hour, jamAkhir_min, jamAkhir_sec;
+    char matkul[100];
+} Jadwal;
+
 // Fungsi untuk login admin
 int adminLogin();
 
@@ -41,6 +58,14 @@ void displayAllMahasiswa();
 // Prosedur untuk menghapus data mahasiswa berdasarkan NIM
 void deleteMahasiswa();
 
-int validasiNIM();
+void login(Jadwal *jadwal, int numMatkul);
+void absensi(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul);
+void saveAbsensi(char nim[], char tanggal[], char waktu[], char status[], char matkul[]);
+void readAbsensi(char nim[]);
+int findMahasiswaIndex(char nim[], Mahasiswa *mahasiswas, int numMahasiswas);
+int isAbsensiAlreadyDone(char nim[], char matkul[], char currentDate[]);
+void printCurrentMatkul(Jadwal *jadwal, int currentMatkulIndex);
+void studentView(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul);
+int validasiNIM(const char *nim);
 
 #endif
