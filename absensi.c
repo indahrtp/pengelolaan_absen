@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <locale.h>
 #include "absensi.h"
 
 //void date()
@@ -74,6 +75,21 @@ int adminLogin()
 
     fclose(adminFile);
     return 0; // Login gagal
+}
+
+void buatFileNIM(const char *nim)
+{
+    char filename[15];
+    sprintf(filename, "%s.dat", nim);
+    FILE *nimFile = fopen(filename, "w");
+
+    if (!nimFile)
+    {
+        printf("Error: File %s tidak dapat dibuat.\n", filename);
+        return;
+    }
+
+    fclose(nimFile);
 }
 
 // Fungsi untuk register mahasiswa
@@ -328,46 +344,271 @@ int adminView()
   return 0;
 }
 
-void studentView()
-{
-	system("cls");
-	int goBack = 0;
-	int pilihan;
-	while (1)
-	{
+void login(Jadwal *jadwal, int numMatkul) {
+    char nim[100];
+    char password[100];
+
     system("cls");
-//    date();
-    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
-    printf("\t\t\t|                Absensi Mahasiswa                  |\n");
-    printf("\t\t\t----------------------------------------------\n\n");
-    printf("\t\t\t1. Absensi\n");
-    printf("\t\t\t2. Lihat Riwayat Absen\n");
-    printf("\t\t\t0. Kembali\n");
-    
-    printf("\t\t\tMasukkan pilihanmu : ");
-    scanf("%d", &pilihan);
-    
-    switch(pilihan)
-      {
-        case 1:
-            absensiMahasiwa();
+	printf("\t\t\tMasukkan NIM: ");
+    scanf("%s", nim);
+    printf("\t\t\tMasukkan password: ");
+    scanf("%s", password);
+
+    FILE *file = fopen("mhs.dat", "r");
+    if (file == NULL) {
+        printf("Error membuka file mhs.dat\n");
+        exit(1);
+    }
+
+    int numMahasiswas = 0;
+    Mahasiswa *mahasiswas = (Mahasiswa *)malloc(sizeof(Mahasiswa));
+    if (mahasiswas == NULL) {
+        printf("Error dalam alokasi memori\n");
+        exit(1);
+    }
+
+    int found = 0;
+
+    while (fscanf(file, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^\n]\n", mahasiswas[numMahasiswas].namaMhs,
+                  mahasiswas[numMahasiswas].nimMhs, mahasiswas[numMahasiswas].password,
+                  mahasiswas[numMahasiswas].alamat, mahasiswas[numMahasiswas].jurusan,
+                  mahasiswas[numMahasiswas].prodi) != EOF) {
+        numMahasiswas++;
+
+        Mahasiswa *temp = (Mahasiswa *)realloc(mahasiswas, (numMahasiswas + 1) * sizeof(Mahasiswa));
+        if (temp == NULL) {
+            printf("Error dalam alokasi memori\n");
+            exit(1);
+        } else {
+            mahasiswas = temp;
+        }
+
+        if (strcmp(nim, mahasiswas[numMahasiswas - 1].nimMhs) == 0 &&
+            strcmp(password, mahasiswas[numMahasiswas - 1].password) == 0) {
+            found = 1;
             break;
-        case 2:
-            rekapAbsen();
-            break;
-        case 0:
-            goBack = 1;
-            break;
-        default:
-            printf("\t\t\t\nPilihan tidak valid. Masukkan pilihan lagi!");
-            getchar();
-      }
-      if (goBack == 1)
-      {
-        break;
-      }
-  }
+        }
+    }
+
+    fclose(file);
+    printf("%d", found);
+
+    if (found) {
+        studentView(nim, mahasiswas, numMahasiswas, jadwal, numMatkul);
+    } else {
+        printf("Login gagal. NIM atau password salah.\n");
+    }
+
+    free(mahasiswas);
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+	while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
 }
 
-void absensiMahasiswa()
 
+void absensi(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul) {
+    time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+
+    char currentDay[100];
+    strftime(currentDay, sizeof(currentDay), "%A", tm_info);
+
+    int currentHour = tm_info->tm_hour;
+    int currentMin = tm_info->tm_min;
+
+    int i;
+    int mahasiswaIndex = findMahasiswaIndex(nim, mahasiswas, numMahasiswas);
+
+    char currentDate[11];
+    strftime(currentDate, sizeof(currentDate), "%Y-%m-%d", tm_info);
+
+    char waktu[9];
+    strftime(waktu, sizeof(waktu), "%T", tm_info);
+
+    int validasi;
+
+    for (i = 0; i < numMatkul; i++) {
+        if (strcmp(currentDay, jadwal[i].hari) == 0) {
+            if ((currentHour > jadwal[i].jamAwal_hour || (currentHour == jadwal[i].jamAwal_hour && currentMin >= jadwal[i].jamAwal_min)) &&
+                (currentHour < jadwal[i].jamAkhir_hour || (currentHour == jadwal[i].jamAkhir_hour && currentMin <= jadwal[i].jamAkhir_min))) {
+
+                validasi = isAbsensiAlreadyDone(nim, jadwal[i].matkul, currentDate);
+
+                if (validasi == 1) {
+                    printf("\n\t\t\tMahasiswa %s telah melakukan absensi matkul %s pada tanggal %s.\n", mahasiswas[mahasiswaIndex].namaMhs, jadwal[i].matkul, currentDate);
+                    printf("\t\t\tAnda masih dalam rentang waktu mata kuliah %s.\n", jadwal[i].matkul);
+                    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+					while (getchar() != '\n'); // Membersihkan buffer input
+					getchar();
+					return;
+                }
+
+                char status[100];
+                system("cls");
+			    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+			    printf("\t\t\t|                Absensi Mahasiswa                  |\n");
+			    printf("\t\t\t----------------------------------------------\n");
+			    printf("\t\t\tAbsensi untuk mata kuliah %s\n", jadwal[i].matkul);
+			    printf("\t\t\t----------------------------------------------\n");
+			    printf("\t\t\t1. Hadir\n");
+			    printf("\t\t\t2. Sakit\n");
+			    printf("\t\t\t3. Izin\n");
+			    
+			    printf("\t\t\t Mark Absensi : ");
+                int selectedOption;
+                scanf("%d", &selectedOption);
+
+                int minutesLate = (currentHour - jadwal[i].jamAwal_hour) * 60 + (currentMin - jadwal[i].jamAwal_min);
+
+                switch (selectedOption) {
+                    case 1:
+                        if (minutesLate > 15) {
+                            strcpy(status, "Telat");
+                        } else {
+                            strcpy(status, "Hadir");
+                        }
+                        break;
+                    case 2:
+                        strcpy(status, "Sakit");
+                        break;
+                    case 3:
+                        strcpy(status, "Izin");
+                        break;
+                    default:
+                        printf("Pilihan tidak valid.\n");
+                        return;
+                }
+
+                saveAbsensi(nim, currentDate, waktu, status, jadwal[i].matkul);
+
+                printf("\t\t\tAbsensi berhasil disimpan.\n");
+                printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+				while (getchar() != '\n'); // Membersihkan buffer input
+				getchar();
+                return;
+            }
+        }
+    }
+
+    printf("\t\t\tTidak ada mata kuliah yang sesuai dengan jadwal saat ini.\n");
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+	while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
+}
+
+void saveAbsensi(char nim[], char tanggal[], char waktu[], char status[], char matkul[]) {
+    char fileName[100];
+    sprintf(fileName, "%s.dat", nim);
+
+    FILE *absensiFile = fopen(fileName, "a");
+    if (absensiFile == NULL) {
+        printf("Error membuka file absensi\n");
+        exit(1);
+    }
+
+    int result = fprintf(absensiFile, "%s %s %s %s\n", tanggal, waktu, status, matkul);
+    if (result < 0) {
+        printf("Error menulis ke file absensi\n");
+        exit(1);
+    }
+
+    fclose(absensiFile);
+}
+
+void readAbsensi(char nim[]) {
+    char fileName[100];
+    sprintf(fileName, "%s.dat", nim);
+
+    FILE *absensiFile = fopen(fileName, "r");
+    if (absensiFile == NULL) {
+        printf("Error membuka file absensi\n");
+        exit(1);
+    }
+
+    char currentTanggal[11];
+    char status[100];
+    char currentMatkul[100];
+    while (fscanf(absensiFile, "%s %s %[^\n]\n", currentTanggal, status, currentMatkul) != EOF) {
+        printf("%s - %s - %s\n", currentTanggal, status, currentMatkul);
+    }
+
+    fclose(absensiFile);
+}
+
+int findMahasiswaIndex(char nim[], Mahasiswa *mahasiswas, int numMahasiswas) {
+    int i;
+    for (i = 0; i < numMahasiswas; i++) {
+        if (strcmp(nim, mahasiswas[i].nimMhs) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int isAbsensiAlreadyDone(char nim[], char matkul[], char currentDate[]) {
+    char fileName[100];
+    sprintf(fileName, "%s.dat", nim);
+
+    FILE *absensiFile = fopen(fileName, "r");
+    if (absensiFile == NULL) {
+        return 0;
+    }
+
+    char currentMatkul[100];
+    char currentTanggal[11];
+    char status[100];
+
+    while (fscanf(absensiFile, "%s %s %[^\n]\n", currentTanggal, status, currentMatkul) != EOF) {
+        if (strcmp(currentMatkul, matkul) == 0 && strcmp(currentTanggal, currentDate) == 0) {
+            fclose(absensiFile);
+            return 1;
+        }
+    }
+
+    fclose(absensiFile);
+    return 0;
+}
+
+void printCurrentMatkul(Jadwal *jadwal, int currentMatkulIndex) {
+    printf("Sedang berlangsung mata kuliah %s pada jam %02d:%02d - %02d:%02d\n", jadwal[currentMatkulIndex].matkul,
+           jadwal[currentMatkulIndex].jamAwal_hour, jadwal[currentMatkulIndex].jamAwal_min,
+           jadwal[currentMatkulIndex].jamAkhir_hour, jadwal[currentMatkulIndex].jamAkhir_min);
+}
+
+void studentView(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul) {
+    system("cls");
+    int goBack = 0;
+    int pilihan;
+
+    while (1) {
+        system("cls");
+        printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+        printf("\t\t\t|                Absensi Mahasiswa                  |\n");
+        printf("\t\t\t----------------------------------------------\n\n");
+        printf("\t\t\t1. Absensi\n");
+        printf("\t\t\t2. Lihat Riwayat Absen\n");
+        printf("\t\t\t0. Kembali\n");
+
+        printf("\t\t\tMasukkan pilihanmu : ");
+        scanf("%d", &pilihan);
+
+        switch (pilihan) {
+            case 1:
+                absensi(nim, mahasiswas, numMahasiswas, jadwal, numMatkul);
+                break;
+            case 2:
+                // Implementasi menu lihat riwayat absen
+                break;
+            case 0:
+                goBack = 1;
+                break;
+            default:
+                printf("\t\t\t\nPilihan tidak valid. Masukkan pilihan lagi!");
+                getchar();
+        }
+
+        if (goBack == 1) {
+            break;
+        }
+    }
+}
