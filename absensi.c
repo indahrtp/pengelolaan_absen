@@ -9,15 +9,9 @@
 #include <string.h>
 #include <time.h>
 #include <locale.h>
+#include <conio.h>
 #include "absensi.h"
 
-//void date()
-//{
-//  time_t T = time(NULL);
-//  struct tm = *localtime(&T);
-//  printf("\n\n\n");
-//  printf("\t\t\t\t\t  Date:%02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900);
-//}
 
 int validasiNIM(const char *nim)
 {
@@ -55,7 +49,21 @@ int adminLogin()
     printf("\t\t\t Masukkan username admin: ");
     scanf("%s", inputUsername);
     printf("\t\t\t Masukkan password admin: ");
-    scanf("%s", inputPassword);
+    int i = 0;
+    while (1) {
+        char c = getch(); // Menggunakan getch() dari <conio.h> untuk menyembunyikan karakter
+        if (c == 13) { // 13 adalah kode ASCII untuk tombol "Enter"
+            inputPassword[i] = '\0';
+            break;
+        } else if (c == 8 && i > 0) { // 8 adalah kode ASCII untuk tombol "Backspace"
+            printf("\b \b"); // Untuk menghapus karakter dari tampilan konsol
+            i--;
+        } else if (c != 8) {
+            inputPassword[i] = c;
+            putchar('*'); // Mengganti karakter yang ditampilkan dengan '*'
+            i++;
+        }
+    }
 
     FILE *adminFile = fopen("admin.dat", "r");
     if (!adminFile)
@@ -290,6 +298,9 @@ void displayAllMahasiswa() {
     }
 
     fclose(mhsFile);
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+	while (getchar() != '\n'); // Membersihkan buffer input
+	getchar();
 }
 
 
@@ -349,10 +360,27 @@ void login(Jadwal *jadwal, int numMatkul) {
     char password[100];
 
     system("cls");
-	printf("\t\t\tMasukkan NIM: ");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|               Login Mahasiswa              |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+    printf("\t\t\t Masukkan NIM: ");
     scanf("%s", nim);
-    printf("\t\t\tMasukkan password: ");
-    scanf("%s", password);
+    printf("\t\t\t Masukkan password: ");
+    int i = 0;
+    while (1) {
+        char c = getch(); // Menggunakan getch() dari <conio.h> untuk menyembunyikan karakter
+        if (c == 13) { // 13 adalah kode ASCII untuk tombol "Enter"
+            password[i] = '\0';
+            break;
+        } else if (c == 8 && i > 0) { // 8 adalah kode ASCII untuk tombol "Backspace"
+            printf("\b \b"); // Untuk menghapus karakter dari tampilan konsol
+            i--;
+        } else if (c != 8) {
+            password[i] = c;
+            putchar('*'); // Mengganti karakter yang ditampilkan dengan '*'
+            i++;
+        }
+    }
 
     FILE *file = fopen("mhs.dat", "r");
     if (file == NULL) {
@@ -575,6 +603,36 @@ void printCurrentMatkul(Jadwal *jadwal, int currentMatkulIndex) {
            jadwal[currentMatkulIndex].jamAkhir_hour, jadwal[currentMatkulIndex].jamAkhir_min);
 }
 
+void tampilRiwayatAbsensi(const char *nim) {
+	Absensi absensi;
+	Jadwal jadwal;
+    char filename[15];
+    
+    sprintf(filename, "%s.dat", nim);
+    FILE *absenFile = fopen(filename, "r");
+
+    if (!absenFile) {
+        printf("Error: File %s tidak dapat dibuka.\n", filename);
+        return;
+    }
+	
+	system("cls");
+    printf("\n\n\n\n\t\t\t----------------------------------------------\n");
+    printf("\t\t\t|         Riwayat Absensi Mahasiswa          |\n");
+    printf("\t\t\t----------------------------------------------\n\n");
+    printf("\t\t\t%-12s%-10s%-10s\n", "Tanggal", "Status", "Mata Kuliah");
+    printf("\t\t\t----------------------------------------------\n");
+
+    while (fscanf(absenFile, "%s %s %[^\n]", absensi.tanggal, absensi.status, jadwal.matkul) == 3) {
+        printf("\t\t\t%-12s%-10s%-10s\n", absensi.tanggal, absensi.status, jadwal.matkul);
+    }
+
+    fclose(absenFile);
+    printf("\n\n\t\t\tTekan tombol apa pun untuk melanjutkan...\n");
+    while (getchar() != '\n'); // Membersihkan buffer input
+    getchar();
+}
+
 void studentView(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *jadwal, int numMatkul) {
     system("cls");
     int goBack = 0;
@@ -597,7 +655,7 @@ void studentView(char nim[], Mahasiswa *mahasiswas, int numMahasiswas, Jadwal *j
                 absensi(nim, mahasiswas, numMahasiswas, jadwal, numMatkul);
                 break;
             case 2:
-                // Implementasi menu lihat riwayat absen
+                tampilRiwayatAbsensi(nim);
                 break;
             case 0:
                 goBack = 1;
