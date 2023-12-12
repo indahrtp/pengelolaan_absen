@@ -1,12 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <locale.h>
 #include "absensi.h"
 
 int main()
 {
 	int choice;
-	int login;
+	int loginAdm;
+	Mahasiswa mhs;
+	
+	setlocale(LC_TIME, "id_ID.UTF-8");
+    FILE *jadwalFile = fopen("jadwal.dat", "r");
+    if (jadwalFile == NULL) {
+        printf("Error membuka file jadwal.dat\n");
+        exit(1);
+    }
+
+    int numMatkul = 0;
+    Jadwal *jadwal = (Jadwal *)malloc(sizeof(Jadwal));
+    if (jadwal == NULL) {
+        printf("Error dalam alokasi memori\n");
+        exit(1);
+    }
+
+    while (fscanf(jadwalFile, "%s %d:%d:%d %d:%d:%d %[^\n]\n", jadwal[numMatkul].hari,
+                  &jadwal[numMatkul].jamAwal_hour, &jadwal[numMatkul].jamAwal_min, &jadwal[numMatkul].jamAwal_sec,
+                  &jadwal[numMatkul].jamAkhir_hour, &jadwal[numMatkul].jamAkhir_min, &jadwal[numMatkul].jamAkhir_sec,
+                  jadwal[numMatkul].matkul) != EOF) {
+        numMatkul++;
+        
+        Jadwal *temp = (Jadwal *)realloc(jadwal, (numMatkul + 1) * sizeof(Jadwal));
+        if (temp == NULL) {
+            printf("Error dalam alokasi memori\n");
+            exit(1);
+        } else {
+            jadwal = temp;
+        }
+    }
+
+    fclose(jadwalFile);
     do
     {
 	    system("cls");
@@ -22,8 +56,8 @@ int main()
         switch (choice)
         {
         case 1:
-        	login=adminLogin();
-            if (login==1)
+        	loginAdm = adminLogin();
+            if (loginAdm == 1)
             {
             	adminView();
         	}
@@ -33,6 +67,7 @@ int main()
             }
             break;
         case 2:
+        	login(jadwal, numMatkul);
         	break;
         case 3:
             printf("\t\t\tTerima kasih. Program selesai.\n");
